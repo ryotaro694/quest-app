@@ -2,24 +2,34 @@ import '@/styles/globals.css';
 import React, { ReactNode } from 'react';
 import Link from 'next/link';
 import { logout } from './logout/action';
+import { Inter as FontSans } from "next/font/google"
+import { cn } from "@/lib/utils"
 
 type Props = {
   children: ReactNode;
 };
 
+const fontSans = FontSans({
+  subsets: ["latin"],
+  variable: "--font-sans",
+})
+
 const RootLayout = ({ children }: Props) => {
   return (
-    <html lang="en">
+    <html lang="ja">
       <head>
         <title>This is the default title</title>
         <meta charSet="utf-8" />
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </head>
-      <body>
-        <header className="bg-[#e58746] shadow-xl">
+      <body className={cn(
+          "min-h-screen bg-background font-sans antialiased",
+          fontSans.variable
+        )}>
+        <header className="shadow-xl">
           <nav aria-label="Global" className="mx-auto flex max-w-7xl items-center justify-start p-6 lg:px-8">
             <Link href="/">
-              <span className="text-sm font-semibold leading-6 text-gray-900 text-white">Home</span>
+              <span className="text-sm font-semibold leading-6 text-gray-900">Home</span>
             </Link>
           </nav>
         </header>

@@ -1,30 +1,66 @@
-import Image from "next/image";
-import questImage from '../public/images/quest-image.jpeg';
 
-export default function Home() {
+import Link from 'next/link';
+import { ZoomIn } from "lucide-react"
+import { cn } from "@/lib/utils"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+
+import {
+  Button
+} from "@/components/ui/button"
+
+import { BreadcrumbWithCustomSeparator } from "./components/breadcrumb"
+import { Payment, columns } from "./components/quest/columns"
+import { DataTable } from "./components/quest/data-table"
+import { prisma } from '@/utils/prisma';
+
+type CardProps = React.ComponentProps<typeof Card>
+
+export default async function Home({ className, ...props }: CardProps) {
+  const data = await getData()
   return (
     <main>
-      <div className="flex conteinar">
-        <div className="max-w-sm w-full lg:max-w-full lg:flex shadow-lg">
-          <Image
-            src={questImage} 
-            alt="クエスト受注ページの画像です" 
-            className="h-48 lg:h-auto lg:w-48 flex-none bg-cover rounded-t lg:rounded-t-none lg:rounded-l text-center overflow-hidden">
-          </Image>
-          <div className="border-r border-b border-l border-gray-400 lg:border-l-0 lg:border-t lg:border-gray-400 bg-white rounded-b lg:rounded-b-none lg:rounded-r p-4 flex flex-col justify-between leading-normal">
-            <div className="mb-8">
-              <p className="text-sm text-gray-600 flex items-center">
-                <svg className="fill-current text-gray-500 w-3 h-3 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                  <path d="M4 8V6a6 6 0 1 1 12 0v2h1a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-8c0-1.1.9-2 2-2h1zm5 6.73V17h2v-2.27a2 2 0 1 0-2 0zM7 6v2h6V6a3 3 0 0 0-6 0z" />
-                </svg>
-                メンバー限定ページ
-              </p>
-              <div className="text-gray-900 font-bold text-xl mb-2 mt-2">クエスト受注</div>
-              <p className="text-gray-700 text-base">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus quia, nulla! Maiores et perferendis eaque, exercitationem praesentium nihil</p>
-            </div>
-          </div>
-        </div>
+      <div className="py-3 mb-2">
+        <h1 className="font-bold text-2xl">DashBoard</h1>
+        <BreadcrumbWithCustomSeparator></BreadcrumbWithCustomSeparator>
       </div>
+      <Card className={cn("w-full", "shadow-xl", className)} {...props}>
+        <CardHeader>
+          <CardTitle>クエストを受注する</CardTitle>
+          <CardDescription>Accept a lot of Quests</CardDescription>
+        </CardHeader>
+      <CardContent className="container mx-auto grid gap-4">
+        <DataTable columns={columns} data={data} />
+      </CardContent>
+      <CardFooter className="flex justify-end">
+        <Link href="/quest">
+          <Button className="w-full">
+            <ZoomIn className="mr-2 h-4 w-4" />さらに確認する
+          </Button>
+        </Link>
+      </CardFooter>
+      </Card>
     </main>
   );
+}
+
+async function getData(): Promise<Payment[]> {
+  const users = await prisma.user.findMany(); 
+  console.log(users)
+  // Fetch data from your API here.
+  return [
+    {
+      id: "728ed52f",
+      amount: 100,
+      status: "pending",
+      email: "m@example.com",
+    },
+    // ...
+  ]
 }
